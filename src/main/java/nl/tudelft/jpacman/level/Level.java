@@ -200,11 +200,14 @@ public class Level {
      */
     public void start() {
         synchronized (startStopLock) {
+            players.forEach(player -> player.setAlive(true));
+
             if (isInProgress()) {
                 return;
             }
             startNPCs();
             inProgress = true;
+
             updateObservers();
         }
     }
@@ -247,6 +250,14 @@ public class Level {
             assert schedule != null;
             schedule.shutdownNow();
         }
+    }
+
+    public boolean isPlayerAlive() {
+        return players.stream().anyMatch(player -> player.getLives() > 0);
+    }
+    public void resetPlayerPosition(Player player){
+        player.occupy(startSquares.get(startSquareIndex));
+        player.setAlive(true);
     }
 
     /**

@@ -40,6 +40,11 @@ public class Player extends Unit {
     private Unit killer;
 
     /**
+     * The amount of lifes the player has.
+     */
+    private int lives;
+
+    /**
      * Creates a new player with a score of 0 points.
      *
      * @param spriteMap
@@ -51,6 +56,7 @@ public class Player extends Unit {
         this.score = 0;
         this.alive = true;
         this.sprites = spriteMap;
+        this.lives = 3;
         this.deathSprite = deathAnimation;
         deathSprite.setAnimating(false);
     }
@@ -78,7 +84,10 @@ public class Player extends Unit {
             this.killer = null;
         }
         if (!isAlive) {
-            deathSprite.restart();
+            lives--;
+            if (lives == 0) {
+                deathSprite.restart();
+            }
         }
         this.alive = isAlive;
     }
@@ -112,10 +121,14 @@ public class Player extends Unit {
 
     @Override
     public Sprite getSprite() {
-        if (isAlive()) {
+        if (lives > 0) {
             return sprites.get(getDirection());
         }
         return deathSprite;
+    }
+
+    public int getLives() {
+        return lives;
     }
 
     /**
